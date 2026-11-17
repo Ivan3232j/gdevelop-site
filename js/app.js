@@ -191,10 +191,6 @@
         <div class="nav-section-title">
           <span>Инструменты</span>
         </div>
-        <a href="#errors" class="nav-link" data-id="errors">
-          <span class="nav-num" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">🚑</span>
-          <span class="nav-title">База ошибок (${data.allErrors.length})</span>
-        </a>
         <a href="#progress" class="nav-link" data-id="progress">
           <span class="nav-num" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">🏆</span>
           <span class="nav-title">Мои достижения</span>
@@ -227,13 +223,16 @@
       return `<pre>${rawMarkdown}</pre>`;
     }
 
+    // Удаляем любые строки с датой и автором
+    const cleanedMarkdown = rawMarkdown.replace(/^[A-Za-z]{3}\s+\d{1,2},\s+\d{4}\s*·\s*@[^\n]+\n*/m, '');
+
     // Настраиваем marked
     marked.setOptions({
       gfm: true,
       breaks: true
     });
 
-    let rendered = marked.parse(rawMarkdown);
+    let rendered = marked.parse(cleanedMarkdown);
 
     // Оборачиваем в контейнер
     const tempDiv = document.createElement('div');
@@ -469,8 +468,6 @@
         <h1 class="lesson-title-main">${lesson.title}</h1>
         <div class="lesson-meta-bar">
           <span class="meta-item"><span class="meta-badge">${lesson.moduleTitle}</span></span>
-          ${lesson.date ? `<span class="meta-item">📅 ${lesson.date}</span>` : ''}
-          <span class="meta-item">👤 ${lesson.author}</span>
           <span class="meta-item">⏱️ 90 минут</span>
         </div>
         <div class="lesson-actions-bar">
@@ -480,9 +477,6 @@
           <button class="action-pill-btn" onclick="navigator.clipboard.writeText(window.location.href); showToast('Ссылка скопирована');">
             <span>🔗 Поделиться ссылкой</span>
           </button>
-          <a href="#errors" class="action-pill-btn" style="color: #f87171;">
-            <span>🚑 Ошибки урока (${lesson.errors ? lesson.errors.length : 0})</span>
-          </a>
         </div>
       </div>
 
@@ -731,9 +725,7 @@
     // Обновляем сайдбар
     updateActiveNavLink(hash);
 
-    if (hash === 'errors') {
-      renderTroubleshootingView();
-    } else if (hash === 'progress') {
+    if (hash === 'progress') {
       renderProgressView();
     } else {
       const lesson = data.lessons.find(l => l.id === hash);
@@ -797,10 +789,10 @@
         err.solution.toLowerCase().includes(q)
       ) {
         results.push({
-          type: 'Ошибка',
-          badge: 'Решение проблемы',
+          type: 'Решение ошибки',
+          badge: err.lessonTitle,
           title: err.symptom,
-          link: `#errors`,
+          link: `#${err.lessonId}`,
           snippet: `Причина: ${err.cause}. Решение: ${err.solution}`
         });
       }
