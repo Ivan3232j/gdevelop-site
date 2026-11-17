@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GDevelop Академия — Курс разработки игр для детей и подростков</title>
+  <meta name="description" content="Полный поурочный курс разработки 2D игр на движке GDevelop 5: Раннер и Топдаун Шутер. Поурочные планы, формулы, иллюзии механик, база 85 частых ошибок и задания для быстрых.">
+  <meta name="author" content="Иван Денисов">
+
+  <!-- Фавикон на основе эмодзи -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕹️</text></svg>">
+
+  <!-- Стили -->
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+  <!-- ВЕРХНЯЯ ПАНЕЛЬ (HEADER) -->
+  <header class="site-header">
+    <div class="header-left">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Открыть меню">
+        <svg class="icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <a href="#m2-1" class="site-logo">
+        <div class="logo-icon">GD</div>
+        <div class="logo-text">
+          <div class="logo-title">
+            <span>GDevelop Академия</span>
+            <span class="logo-badge">v5</span>
+          </div>
+          <div class="logo-sub">Курс Ивана Денисова</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="header-center">
+      <button class="search-trigger-btn" id="search-trigger-btn" aria-label="Поиск по урокам">
+        <div class="search-trigger-left">
+          <span>🔍</span>
+          <span>Поиск по курсу (формулы, ошибки, темы)...</span>
+        </div>
+        <div class="search-shortcut">⌘K</div>
+      </button>
+    </div>
+
+    <div class="header-right">
+      <a href="#errors" class="header-btn danger-btn" title="База частых ошибок">
+        <span>🚑 Скорая помощь</span>
+        <span class="badge-count" id="header-error-count">85</span>
+      </a>
+
+      <button class="header-btn" id="theme-toggle-btn" title="Переключить тему (тёмная/светлая)">
+        🌙
+      </button>
+
+      <button class="header-btn" onclick="window.print()" title="Распечатать урок">
+        🖨️
+      </button>
+    </div>
+  </header>
+
+  <!-- ОСНОВНОЙ ЛЕЙАУТ -->
+  <div class="site-layout">
+    <!-- ЗАТЕМНЕНИЕ ДЛЯ МОБИЛЬНОГО МЕНЮ -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <!-- БОКОВОЕ МЕНЮ (SIDEBAR) -->
+    <aside class="site-sidebar" id="sidebar">
+      <div class="sidebar-content">
+
+        <!-- КАРТОЧКА ПРОГРЕССА УЧЕНИКА -->
+        <div class="student-progress-card">
+          <div class="progress-card-header">
+            <span class="progress-card-title">
+              <span>🎯 Мой прогресс</span>
+            </span>
+            <span class="progress-card-score" id="progress-score-text">0/0</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-bar-fill"></div>
+          </div>
+          <div class="progress-card-sub">
+            Отмечайте чек-листы в конце урока
+          </div>
+        </div>
+
+        <!-- НАВИГАЦИЯ ПО УРОКАМ -->
+        <nav id="sidebar-nav">
+          <!-- Генерируется динамически через js/app.js -->
+        </nav>
+
+        <!-- ПОДВАЛ САЙДБАРА -->
+        <div class="sidebar-footer">
+          <div>Автор курса: <strong>Иван Денисов</strong></div>
+          <div style="margin-top: 4px;">Сайт оптимизирован для GitHub Pages</div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- ОСНОВНАЯ ОБЛАСТЬ КОНТЕНТА -->
+    <main class="site-main" id="main-content">
+      <!-- Контент урока, базы ошибок или прогресса рендерится через js/app.js -->
+      <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+        <h2>Загрузка материалов урока...</h2>
+      </div>
+    </main>
+  </div>
+
+  <!-- МОДАЛЬНОЕ ОКНО ГЛОБАЛЬНОГО ПОИСКА -->
+  <div class="modal-overlay" id="search-modal">
+    <div class="modal-dialog">
+      <div class="search-modal-header">
+        <span>🔍</span>
+        <input type="text" class="search-modal-input" id="search-modal-input" placeholder="Поиск по урокам, формулам, ошибкам..." autocomplete="off">
+        <button class="search-modal-close" id="search-modal-close">✕</button>
+      </div>
+      <div class="search-modal-results" id="search-modal-results">
+        <!-- Результаты поиска -->
+      </div>
+      <div class="search-modal-footer">
+        <span>Навигация: кликните для перехода</span>
+        <span>Закрыть: <kbd>Esc</kbd></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ (TOAST) -->
+  <div class="toast-msg" id="toast-msg"></div>
+
+  <!-- СКРИПТЫ -->
+  <script src="./js/marked.min.js"></script>
+  <script src="./js/confetti.min.js"></script>
+  <script src="./js/lessons-data.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
