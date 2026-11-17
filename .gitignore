@@ -3,3 +3,9 @@ __pycache__/
 *.pyc
 .vscode/
 .idea/
+
+# Локальные обучающие материалы и скрипты сборки (остаются только на устройстве)
+GdevFull*
+lessons/
+scripts/
+deploy.sh
